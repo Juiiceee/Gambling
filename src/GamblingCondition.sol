@@ -4,8 +4,5 @@ pragma solidity ^0.8.2;
 import {Gambling} from "./Gambling.sol";
 
 contract GamblingCondition is Gambling {
-	constructor (uint amount, uint percentage) Gambling(amount, percentage) {
-
-	}
-	
+	constructor(uint256 amount, uint256 percentage) Gambling(amount, percentage) {}
 }

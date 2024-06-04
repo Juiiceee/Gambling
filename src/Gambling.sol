@@ -2,36 +2,36 @@
 
 pragma solidity ^0.8.2;
 
-contract Gambling{
-	mapping(address => uint) private _nbTicketsByAddress;
+contract Gambling {
+	mapping(address => uint256) private _nbTicketsByAddress;
 
-	uint private _nbTickets;
-	uint private _amount;
+	uint256 private _nbTickets;
+	uint256 private _amount;
 	address private _owner;
 	bool private _isClosed;
-	uint private _percentage;
+	uint256 private _percentage;
 	address private _winner;
 
 	address[] private _indexToAddress;
 
-	constructor (uint amount, uint percentage) {
+	constructor(uint256 amount, uint256 percentage) {
 		require(percentage <= 200, "Percentage is hight");
 		setAmount(amount * 1 ether);
 		setPercentage(percentage);
 		_owner = msg.sender;
 	}
 
-	modifier onlyOwner {
+	modifier onlyOwner() {
 		require(getOwner() == msg.sender, "You aren't the owner");
 		_;
 	}
 
-	modifier onlyOpen {
+	modifier onlyOpen() {
 		require(getIsClosed() == false, "Closed printing");
 		_;
 	}
 
-	modifier onlySameAmount {
+	modifier onlySameAmount() {
 		require(getAmount() == msg.value, "Not same amount");
 		_;
 	}
@@ -48,24 +48,25 @@ contract Gambling{
 		payable(getWinner()).transfer(address(this).balance);
 	}
 
-	function getRandomNumber(uint limit) public view returns (uint) {
-		uint randomHash = uint(keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp, msg.sender)));
+	function getRandomNumber(uint256 limit) public view returns (uint256) {
+		uint256 randomHash =
+			uint256(keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp, msg.sender)));
 		return randomHash % limit;
 	}
 
-	function getNbTickets() public view returns (uint) {
+	function getNbTickets() public view returns (uint256) {
 		return _nbTickets;
 	}
 
-	function setNbTickets(uint nbTickets) private {
+	function setNbTickets(uint256 nbTickets) private {
 		_nbTickets = nbTickets;
 	}
 
-	function getAmount() public view returns (uint) {
+	function getAmount() public view returns (uint256) {
 		return _amount;
 	}
 
-	function setAmount(uint amount) private {
+	function setAmount(uint256 amount) private {
 		_amount = amount;
 	}
 
@@ -81,15 +82,15 @@ contract Gambling{
 		_isClosed = closed;
 	}
 
-	function getNbTicketsByAddress(address addr) public view returns (uint) {
+	function getNbTicketsByAddress(address addr) public view returns (uint256) {
 		return _nbTicketsByAddress[addr];
 	}
 
-	function setNbTicketsByAddress(address addr, uint nbTickets) private {
+	function setNbTicketsByAddress(address addr, uint256 nbTickets) private {
 		_nbTicketsByAddress[addr] = nbTickets;
 	}
-	
-	function getIndexToAddress(uint index) public view returns (address) {
+
+	function getIndexToAddress(uint256 index) public view returns (address) {
 		require(index < _indexToAddress.length, "Invalid index");
 		return _indexToAddress[index];
 	}
@@ -98,11 +99,11 @@ contract Gambling{
 		_indexToAddress.push(addr);
 	}
 
-	function getPercentage() public view returns (uint) {
+	function getPercentage() public view returns (uint256) {
 		return _percentage;
 	}
-	
-	function setPercentage(uint percentage) private {
+
+	function setPercentage(uint256 percentage) private {
 		_percentage = percentage;
 	}
 
