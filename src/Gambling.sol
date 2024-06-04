@@ -3,10 +3,82 @@
 pragma solidity ^0.8.2;
 
 contract Gambling{
-	mapping(address => uint) public nbTicketsByAddress;
-	uint public nbTickets;
-	uint private amont;
-	constructor (uint oui) {
-		amont = oui;
+	mapping(address => uint) private _nbTicketsByAddress;
+
+	uint private _nbTickets;
+	uint private _amount;
+	address private _owner;
+	bool private _isClosed;
+
+	address[] private _indexToAddress;
+
+	constructor (uint amount) {
+		setAmount(amount);
+		_owner = msg.sender;
+	}
+
+	modifier onlyOpen {
+		require(getIsClosed() == false, "Closed printing");
+		_;
+	}
+
+	modifier onlySameAmount {
+		require(getAmount() == msg.value, "Not same amount");
+		_;
+	}
+
+	function getTicket() public payable onlySameAmount onlyOpen {
+		setNbTickets(getNbTickets() + 1);
+		setIndexToAddress(msg.sender);
+	}
+
+	function getRandomNumber() public view returns (uint) {
+		uint randomHash = uint(keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp, msg.sender)));
+		return randomHash;
+	}
+
+	function getNbTickets() public view returns (uint) {
+		return _nbTickets;
+	}
+
+	function setNbTickets(uint nbTickets) private {
+		_nbTickets = nbTickets;
+	}
+
+	function getAmount() public view returns (uint) {
+		return _amount;
+	}
+
+	function setAmount(uint amount) private {
+		_amount = amount;
+	}
+
+	function getOwner() public view returns (address) {
+		return _owner;
+	}
+
+	function getIsClosed() public view returns (bool) {
+		return _isClosed;
+	}
+
+	function setIsClosed(bool closed) private {
+		_isClosed = closed;
+	}
+
+	function getNbTicketsByAddress(address addr) public view returns (uint) {
+		return _nbTicketsByAddress[addr];
+	}
+
+	function setNbTicketsByAddress(address addr, uint nbTickets) private {
+		_nbTicketsByAddress[addr] = nbTickets;
+	}
+	
+	function getIndexToAddress(uint index) public view returns (address) {
+		require(index < _indexToAddress.length, "Invalid index");
+		return _indexToAddress[index];
+	}
+
+	function setIndexToAddress(address addr) private {
+		_indexToAddress.push(addr);
 	}
 }
