@@ -5,8 +5,8 @@ pragma solidity ^0.8.2;
 contract Gambling{
 	mapping(address => uint) public nbTicketsByAddress;
 	uint public nbTickets;
-	uint public salut;
+	uint private amont;
 	constructor (uint oui) {
-		salut = oui;
+		amont = oui;
 	}
 }
