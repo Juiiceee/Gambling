@@ -41,11 +41,6 @@ contract Gambling{
 		setIndexToAddress(msg.sender);
 	}
 
-	function tr() public view returns(uint)
-	{
-		return (address(this).balance * (getPercentage() / 10));
-	}
-
 	function closingPrints() public onlyOwner onlyOpen {
 		setIsClosed(true);
 		setWinner(getIndexToAddress(getRandomNumber(getNbTickets())));
