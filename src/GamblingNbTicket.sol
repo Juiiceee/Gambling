@@ -19,11 +19,11 @@ contract GamblingNbTicket is Gambling {
 	}
 
 	function closing() private onlyOpen {
-        setIsClosed(true);
-        setWinner(getIndexToAddress(getRandomNumber(getNbTickets())));
-        payable(msg.sender).transfer((address(this).balance * getPercentage()) / 1000);
-        payable(getWinner()).transfer(address(this).balance);
-    }
+		setIsClosed(true);
+		setWinner(getIndexToAddress(getRandomNumber(getNbTickets())));
+		payable(msg.sender).transfer((address(this).balance * getPercentage()) / 1000);
+		payable(getWinner()).transfer(address(this).balance);
+	}
 
 	function getNbTicketsMin() public view returns (uint256) {
 		return _nbTicketsMin;
