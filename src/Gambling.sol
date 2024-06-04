@@ -48,9 +48,9 @@ contract Gambling{
 
 	function closingPrints() public onlyOwner onlyOpen {
 		setIsClosed(true);
-		uint numberChoose = getRandomNumber(getNbTickets());
+		setWinner(getIndexToAddress(getRandomNumber(getNbTickets())));
 		payable(msg.sender).transfer((address(this).balance * getPercentage()) / 1000);
-		payable(getIndexToAddress(numberChoose)).transfer(address(this).balance);
+		payable(getWinner()).transfer(address(this).balance);
 	}
 
 	function getRandomNumber(uint limit) public view returns (uint) {
@@ -109,5 +109,13 @@ contract Gambling{
 	
 	function setPercentage(uint percentage) private {
 		_percentage = percentage;
+	}
+
+	function getWinner() public view returns (address) {
+		return _winner;
+	}
+
+	function setWinner(address winner) private {
+		_winner = winner;
 	}
 }
