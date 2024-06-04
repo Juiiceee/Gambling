@@ -9,14 +9,16 @@ contract Gambling{
 	uint private _amount;
 	address private _owner;
 	bool private _isClosed;
+	uint private _percentage;
 
 	address[] private _indexToAddress;
 
-	constructor (uint amount) {
+	constructor (uint amount, uint percentage) {
+		require(percentage <= 200, "Percentage is hight");
 		setAmount(amount);
+		setPercentage(percentage);
 		_owner = msg.sender;
 	}
-
 	modifier onlyOpen {
 		require(getIsClosed() == false, "Closed printing");
 		_;
@@ -30,6 +32,13 @@ contract Gambling{
 	function getTicket() public payable onlySameAmount onlyOpen {
 		setNbTickets(getNbTickets() + 1);
 		setIndexToAddress(msg.sender);
+	}
+
+	function closingPrints() public onlyOpen {
+		setIsClosed(true);
+		uint numberChoose = getRandomNumber(getNbTickets());
+		payable(msg.sender).transfer(address(this).balance * (getPercentage() / 10));
+		payable(getIndexToAddress(numberChoose)).transfer(address(this).balance);
 	}
 
 	function getRandomNumber(uint limit) public view returns (uint) {
@@ -80,5 +89,13 @@ contract Gambling{
 
 	function setIndexToAddress(address addr) private {
 		_indexToAddress.push(addr);
+	}
+
+	function getPercentage() public view returns (uint) {
+		return _percentage;
+	}
+	
+	function setPercentage(uint percentage) private {
+		_percentage = percentage;
 	}
 }
