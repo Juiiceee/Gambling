@@ -32,9 +32,9 @@ contract Gambling{
 		setIndexToAddress(msg.sender);
 	}
 
-	function getRandomNumber() public view returns (uint) {
+	function getRandomNumber(uint limit) public view returns (uint) {
 		uint randomHash = uint(keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp, msg.sender)));
-		return randomHash;
+		return randomHash % limit;
 	}
 
 	function getNbTickets() public view returns (uint) {
